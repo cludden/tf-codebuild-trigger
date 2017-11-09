@@ -1,8 +1,44 @@
 {
   "github": {
-    "events": {
-      "pull_request": "buildspec.pr.yml",
-      "release": "buildspec.release.yml"
+    "buildspecs": {
+      "buildspec.pr.yml": {
+        "type": "object",
+        "properties": {
+          "eventName": {
+            "const": "pull_request"
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "opened",
+              "edited",
+              "reopened"
+            ]
+          }
+        },
+        "required": [
+          "eventName",
+          "action"
+        ]
+      },
+      "buildspec.release.yml": {
+        "type": "object",
+        "properties": {
+          "eventName": {
+            "const": "release"
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "published"
+            ]
+          }
+        },
+        "required": [
+          "eventName",
+          "action"
+        ]
+      }
     }
   },
   "log": {

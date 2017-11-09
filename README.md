@@ -1,6 +1,10 @@
 # tf-codebuild-trigger
 a `node.js` lambda function that trigger `AWS Codebuild` project builds using `Github` event payloads delivered via `SNS`
 
+<p align="center">
+<img src="./architecture.png" align="center" alt="architecture diagram" />
+</p>
+
 ## Installing
 ```shell
 # clone the repo and install dependencies
@@ -44,16 +48,78 @@ $ docker-compose run tf-codebuild-trigger
 1. Push release & release tag to github `git push --follow-tags`
 1. [Publish new release](https://help.github.com/articles/creating-releases/) in github, using the release notes from the [CHANGELOG](./CHANGELOG)
 
+## Configuring
+Define custom configuration
+```json
+{
+  "github": {
+    "buildspecs": {
+      "buildspec.pr.yml": {
+        "type": "object",
+        "properties": {
+          "eventName": {
+            "const": "pull_request"
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "opened",
+              "edited",
+              "reopened"
+            ]
+          }
+        },
+        "required": [
+          "eventName",
+          "action"
+        ]
+      },
+      "buildspec.release.yml": {
+        "type": "object",
+        "properties": {
+          "eventName": {
+            "const": "release"
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "published"
+            ]
+          }
+        },
+        "required": [
+          "eventName",
+          "action"
+        ]
+      }
+    }
+  },
+  "log": {
+    "level": "info"
+  }
+}
+```
+
+Add JSON configuration to ssm
+```shell
+$ aws ssm put-parameter --name /secrets/codebuild-trigger/custom --type SecureString --value $JSONCONFIG
+```
 ## Deploying
 Via terraform
 ```
 module "codebuild_trigger" {
-  source        = "git::git@github.com:cludden/tf-codebuild-trigger.git//terraform?ref={version}"
-  memory_size   = 128
-  name          = "codebuild-trigger"
-  region        = "us-west-2"
-  sns_topic_arn = "${var.sns_topic_arn}"
-  timeout       = 10
+  source                     = "git::git@github.com:cludden/tf-codebuild-trigger.git//terraform?ref={version}"
+  additional_parameter_names = "/secrets/codebuild-trigger/custom"
+  config_parameter_name      = "/secrets/codebuild-trigger"
+  debug                      = ""
+  memory_size                = 128
+  name                       = "codebuild-trigger"
+  node_env                   = "production"
+  region                     = "us-west-2"
+  s3_bucket                  = "my-artifact-bucet"
+  s3_key                     = "tf-codebuild-trigger/${var.version}/index.zip"
+  sns_topic_arn              = "${var.sns_topic_arn}"
+  timeout                    = 10
 }
 ```
 

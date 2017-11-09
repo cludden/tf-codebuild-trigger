@@ -22,9 +22,10 @@ resource "aws_lambda_function" "trigger" {
 
 # define terraform managed configuration
 resource "aws_ssm_parameter" "configuration" {
-  name  = "${var.config_parameter_name}"
-  type  = "SecureString"
-  value = "${data.template_file.configuration.rendered}"
+  name      = "${var.config_parameter_name}"
+  type      = "SecureString"
+  value     = "${data.template_file.configuration.rendered}"
+  overwrite = true
 }
 
 data "template_file" "configuration" {
