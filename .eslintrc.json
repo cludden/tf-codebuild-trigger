@@ -1,0 +1,12 @@
+{
+  "extends": [
+    "airbnb-base"
+  ],
+  "rules": {
+    "import/no-extraneous-dependencies": [
+      "error", { "devDependencies": [ "**/test/**/*.js", "webpack.config.js" ]}
+    ],
+    "no-underscore-dangle": "off",
+    "no-use-before-define": "off"
+  }
+}

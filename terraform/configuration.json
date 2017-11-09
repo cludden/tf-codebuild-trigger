@@ -1,0 +1,14 @@
+{
+  "github": {
+    "events": {
+      "pull_request": "buildspec.pr.yml",
+      "release": "buildspec.release.yml"
+    }
+  },
+  "log": {
+    "level": "info"
+  },
+  "sns": {
+    "topic_arn": "${sns_topic_arn}"
+  }
+}

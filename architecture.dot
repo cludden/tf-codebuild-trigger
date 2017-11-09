@@ -1,0 +1,23 @@
+digraph architecture {
+  github [label="Github Webhook" shape="egg" fillcolor="mediumslateblue" style="filled"];
+  cb1 [label="Project 1 (CodeBuild)" shape="rect" fillcolor="seagreen1" style="filled"];
+  cb2 [label="Project 2 (CodeBuild)" shape="rect" fillcolor="seagreen1" style="filled"];
+  cb3 [label="Project n (CodeBuild)" shape="rect" fillcolor="seagreen1" style="filled"];
+
+  subgraph cluster_gw {
+    color="lightgrey";
+    api [label="API Gateway" shape="egg" fillcolor="mediumslateblue" style="filled"];
+    gw [label="tf-github-webhooks (λ)" shape="rect" fillcolor="orange" style="filled"];
+    sns [label="SNS" shape="cds" fillcolor="plum" style="filled"];
+    api -> gw -> sns;
+  }
+
+  subgraph cluster_ct {
+    color="black";
+    ct [label="tf-codebuild-triggers (λ)" shape="rect" fillcolor="orange" style="filled"];
+  }
+
+  github -> api;
+  sns -> ct;
+  ct -> cb1,cb2,cb3;
+}

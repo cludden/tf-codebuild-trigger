@@ -1,0 +1,15 @@
+version: '2'
+services:
+  tf-codebuild-trigger:
+    build:
+      context: .
+      dockerfile: ./test/Dockerfile.test
+    command: npm run coverage
+    environment:
+      CONFIG_PARAMETER_NAMES: foo,bar
+      LOG_LEVEL: fatal
+      NODE_ENV: test
+      SNS_TOPIC_ARN: arn:aws:sns:us-east-1:123456789:test-topic
+    volumes:
+     - .:/home/app/src
+     - /home/app/src/node_modules
