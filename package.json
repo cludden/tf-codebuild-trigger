@@ -1,6 +1,6 @@
 {
   "name": "tf-codebuild-trigger",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "a node.js lambda function that triggers AWS Codebuild project builds using github event payloads delivered via SNS",
   "main": "./dist/index.js",
   "scripts": {
